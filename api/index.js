@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import userRoutes from "./routes/user.routes.js";
 
 dotenv.config();
 //Connect to MongoDB
@@ -18,3 +19,9 @@ const app = express();
 app.listen(3000, () => {
   console.log("Server Listening on port 3000");
 });
+
+app.get("/", (req, res) => {
+  res.json("API is Working!!");
+});
+
+app.use("/api/users", userRoutes);
