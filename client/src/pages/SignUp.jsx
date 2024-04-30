@@ -13,14 +13,14 @@ const SignUp = () => {
         />
         <input
           type="text"
-          placeholder="UserName"
-          id="username"
+          placeholder="Email"
+          id="email"
           className="bg-slate-100 p-3"
         />
         <input
           type="text"
-          placeholder="UserName"
-          id="username"
+          placeholder="PassWord"
+          id="password"
           className="bg-slate-100 p-3"
         />
         <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-95">
