@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -15,6 +16,7 @@ const SignUp = () => {
     try {
       setLoading(true);
       setError(false);
+      setErrorMessage(null);
       // call the Api
       // to make this api call work wihout domain we have to setup proxy in vite config
       // in the fetch api passing method and headers is necessary. else it wont  work
@@ -27,9 +29,10 @@ const SignUp = () => {
       });
       const data = await res.json();
       setLoading(false);
-      // console.log(data);
+      console.log(data);
       if (data.success === false) {
         setError(true);
+        setErrorMessage(data.message);
         return;
       }
     } catch (error) {
@@ -72,10 +75,11 @@ const SignUp = () => {
       <div className="flex gap-2 mt-5">
         <p>Have an account?</p>
         <Link to="/sign-in">
-          <span className="text-red-500">Sign In</span>
+          <span className="text-blue-500">Sign In</span>
         </Link>
       </div>
-      <p className="text-red-700">{error && "Something Went Wrong!"}</p>
+      <p className="text-red-700">{error && "Something went Wrong!"}</p>
+      {/* <p className="text-red-700">{error && errorMessage}</p> */}
     </div>
   );
 };
