@@ -45,6 +45,7 @@ export const signin = async (req, res, next) => {
 
     const expires = new Date(Date.now() + 86400000); // 1 day in milliseconds
 
+    // send token to the user in the form of cookie
     res
       .cookie("access_token", token, {
         httpOnly: true,
