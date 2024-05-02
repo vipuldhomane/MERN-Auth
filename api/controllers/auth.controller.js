@@ -52,7 +52,7 @@ export const signin = async (req, res, next) => {
         expires,
       })
       .status(200)
-      .json({ message: "User Logged In Successfully!", rest });
+      .json(rest);
   } catch (error) {
     next(error);
   }
