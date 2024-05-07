@@ -57,3 +57,63 @@ export const signin = async (req, res, next) => {
     next(error);
   }
 };
+
+// Google OAuth
+
+export const google = async (req, res, next) => {
+  try {
+    const { name, email, photo } = req.body;
+    const user = await User.findOne({ email: email });
+    // if user exits in the database Just Log her in
+    if (user) {
+      //Generate Token
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      // remove password from the object
+      const { password: hashedPassword, ...rest } = user._doc;
+      const expires = new Date(Date.now() + 86400000); // 1 day in milliseconds
+      // send token to the user in the form of cookie
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          expires,
+        })
+        .status(200)
+        .json(rest);
+    } else {
+      // If User does not exits in the DB then create a new account.
+      // we are getting only name and email from OAuth
+      // Create a new password and username for her.
+
+      // This will generate 16 digit pass
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+
+      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+
+      const newUser = new User({
+        username:
+          name.split(" ").join("").toLowerCase() +
+          Math.random().toString(36).slice(-8),
+        email,
+        password: hashedPassword,
+        profilePicture: photo,
+      });
+      await newUser.save();
+      // Generate token
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const { password: hashedPassword2, ...rest } = newUser._doc;
+
+      const expires = new Date(Date.now() + 86400000); // 1 day in milliseconds
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          expires,
+        })
+        .status(200)
+        .json(rest);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
