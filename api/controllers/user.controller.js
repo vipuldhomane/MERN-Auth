@@ -1,5 +1,6 @@
 import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
+import { errorHandler } from "../utils/error.js";
 
 export const test = (req, res) => {
   console.log(req.body);
@@ -7,6 +8,7 @@ export const test = (req, res) => {
 
 export const updateUser = async (req, res, next) => {
   // params is the dynamic slug passed
+  // console.log(req.body);
   if (req.user.id !== req.params.id) {
     return next(errorHandler(401, "You can update only your account"));
   }
@@ -21,7 +23,7 @@ export const updateUser = async (req, res, next) => {
           username: req.body.username,
           email: req.body.email,
           password: req.body.password,
-          profilePicture: req.body.profilePicture,
+          profilePicture: req.body.imageUrl,
         },
       },
       { new: true }
