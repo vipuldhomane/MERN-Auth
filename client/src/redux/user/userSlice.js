@@ -46,6 +46,11 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    signOut: (state) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = false;
+    },
   },
 });
 //export the actions
@@ -59,6 +64,7 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signOut,
 } = userSlice.actions;
 
 // Export the reducer as a default export to use in reducer in store.js
