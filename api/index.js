@@ -30,14 +30,20 @@ app.use(cookieParser());
 
 // setup to run on render
 
-// Create __dirname equivalent
+// app.use(express.static(path.join(__dirname, "/client/dist")));
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+// });
+// Serve static files
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const staticPath = path.join(__dirname, "/client/dist");
 
-app.use(express.static(path.join(__dirname, "/client/dist")));
+app.use(express.static(staticPath));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  res.sendFile(path.join(staticPath, "index.html"));
 });
 
 //Run server on Port
