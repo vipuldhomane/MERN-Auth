@@ -8,6 +8,9 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -58,7 +61,7 @@ const Profile = () => {
       dispatch(updateUserFailure(error));
     }
   };
-  console.log(formData);
+  // console.log(formData);
   const handleFileUpload = async () => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + image.name;
@@ -90,6 +93,27 @@ const Profile = () => {
         });
       }
     );
+  };
+
+  // Delete user Handler
+  const handleDelete = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      if (data.success === "false") {
+        dispatch(deleteUserFailure(data));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error));
+    }
   };
 
   return (
@@ -155,14 +179,16 @@ const Profile = () => {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span onClick={handleDelete} className="text-red-700 cursor-pointer">
+          Delete Account
+        </span>
         <span className="text-red-700 cursor-pointer ">Sign Out</span>
       </div>
 
       <p className="text-red-600 text-center p-5">
         {error && "Something Went Wrong!"}
       </p>
-      <p className="text-green-600 text-center border border-green-600 p-5">
+      <p className="text-green-600 text-center p-5">
         {updateSuccess && "User Updated Successfully!"}
       </p>
     </div>
